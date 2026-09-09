@@ -1,0 +1,23 @@
+# Data files (too large for Git)
+data/
+*.csv
+*.epw
+*.zip
+*.tar.gz
+# Model checkpoints
+*.pth
+*.pt
+*.zip
+checkpoints/
+# Results (keep JSON records, ignore heavy outputs)
+results/*/checkpoints/
+logs/
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.env
+venv/
+# OS
+.DS_Store
+Thumbs.db
