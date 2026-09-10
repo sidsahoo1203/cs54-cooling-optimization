@@ -33,3 +33,35 @@
   Resolved via `wsl --unregister Ubuntu` then fresh install.
 
 **Next:** Clone SustainDC, install requirements, run demo training.
+
+## 2026-09-09 (Day 1, cont.) — SustainDC Installation
+
+**Done:**
+- Cloned SustainDC (HewlettPackard/dc-rl) into project folder.
+- Installed requirements.txt: torch 2.0.0+cpu, Gymnasium 0.29.1,
+  tensorflow 2.12.0, ray 2.24.0, PsychroLib 2.5.0, opyplus 1.4.2.
+- Verified `import sustaindc_env` succeeds.
+
+**Undocumented dependencies (missing from their requirements.txt):**
+1. matplotlib
+2. dash
+3. dash-bootstrap-components
+
+**Version conflicts introduced by dash:**
+- Werkzeug 3.0.2 -> 3.1.8
+- typing_extensions 4.11.0 -> 4.16.0
+(Both were pinned by SustainDC; dash required newer.)
+
+**Problem:** pip install failed with [Errno 28] No space left on device.
+Root cause: /tmp is a 1.5 GB tmpfs (RAM-backed); the TensorFlow 2.12
+wheel (586 MB) exceeded it while unpacking. Disk had 953 GB free.
+Fix: TMPDIR=~/tmp to redirect pip's temp directory to real disk.
+
+**Bundled data confirmed:**
+- Workload: Alibaba_CPU_Data_Hourly_1.csv, _2.csv,
+  GoogleClusteData_CPU_Data_Hourly_1.csv
+  Format: unnamed index + cpu_load (fraction 0-1), 8905 rows
+- Weather: 11 .epw files (US locations)
+- CarbonIntensity: 17 regional CSVs
+
+**Next:** Explore environment structure, run a first episode.
