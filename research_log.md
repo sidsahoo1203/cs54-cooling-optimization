@@ -65,3 +65,34 @@ Fix: TMPDIR=~/tmp to redirect pip's temp directory to real disk.
 - CarbonIntensity: 17 regional CSVs
 
 **Next:** Explore environment structure, run a first episode.
+
+
+## 2026-09-12 — Phase 1 Complete
+
+**Delivered:** PDF requirement (b) — thermal digital twin + Gym environment.
+
+**Baseline result (5 seeds, 7-day episodes, Jan, NY weather, Alibaba trace):**
+- PUE: 1.4123 +/- 0.0045
+- Cooling energy: 71,903 +/- 784 kWh
+- Max inlet temp: 23.3 C (setpoint 18 + 5.3 offset)
+- ASHRAE violations: 0
+
+**Key findings:**
+1. rack_inlet_temp = CRAC_setpoint + fixed offset. No thermal inertia.
+   Prediction target must be IT power / heat generation, not inlet temp.
+2. Control DOES have inertia: agent applies +/-1 C deltas, range 15.0-21.6,
+   with acceleration after 3 consecutive same-direction actions.
+   This is the mechanical basis for anticipatory control.
+3. All 20 racks receive identical utilization. Racks differ in hardware
+   (110-170 W) and approach temp (5.0/5.3 C), not load.
+4. Setpoint bounds mean inlet temp can never exceed ASHRAE 27 C.
+   Violations are structurally impossible -> report headroom instead.
+5. reset() starts at a random day/hour with unseeded global random.
+   Must seed random + numpy externally.
+6. Workload is quantized to 2 decimal places before reaching the DC.
+
+**Questions for guide:**
+- Accept zero-violation metric + headroom, or widen setpoint bounds?
+- Is uniform per-rack load a limitation to address or to note?
+
+**Next:** Phase 2 — feature engineering and selection.
