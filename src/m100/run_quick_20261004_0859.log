@@ -1,0 +1,468 @@
+Started Sun Oct  4 08:59:01 UTC 2026
+
+######## 01_inspect  — schema and data dictionary
+
+==============================================================================
+CS54 — M100 inspection · month 20-06
+==============================================================================
+RAW_ROOT = /home/siddharth/research/cs54-cooling/data/m100_raw
+
+==============================================================================
+A. Plugin / metric inventory present on disk
+==============================================================================
+
+  ganglia_pub  (33 metrics)
+      boottime                bytes_in                bytes_out               cpu_aidle               cpu_idle                cpu_nice              
+      cpu_num                 cpu_speed               cpu_steal               cpu_system              cpu_user                cpu_wio               
+      disk_free               disk_total              gexec                   load_fifteen            load_five               load_one              
+      machine_type            mem_buffers             mem_cached              mem_free                mem_shared              mem_total             
+      os_name                 os_release              part_max_used           pkts_in                 pkts_out                proc_run              
+      proc_total              swap_free               swap_total            
+
+  ipmi_pub  (104 metrics)
+      ambient                 dimm0_temp              dimm10_temp             dimm11_temp             dimm12_temp             dimm13_temp           
+      dimm14_temp             dimm15_temp             dimm1_temp              dimm2_temp              dimm3_temp              dimm4_temp            
+      dimm5_temp              dimm6_temp              dimm7_temp              dimm8_temp              dimm9_temp              fan0_0                
+      fan0_1                  fan1_0                  fan1_1                  fan2_0                  fan2_1                  fan3_0                
+      fan3_1                  fan_disk_power          gpu0_core_temp          gpu0_mem_temp           gpu1_core_temp          gpu1_mem_temp         
+      gpu3_core_temp          gpu3_mem_temp           gpu4_core_temp          gpu4_mem_temp           gv100card0              gv100card1            
+      gv100card3              gv100card4              p0_core0_temp           p0_core10_temp          p0_core11_temp          p0_core12_temp        
+      p0_core13_temp          p0_core14_temp          p0_core15_temp          p0_core16_temp          p0_core17_temp          p0_core18_temp        
+      p0_core19_temp          p0_core1_temp           p0_core20_temp          p0_core21_temp          p0_core22_temp          p0_core23_temp        
+      p0_core2_temp           p0_core3_temp           p0_core4_temp           p0_core5_temp           p0_core6_temp           p0_core7_temp         
+      p0_core8_temp           p0_core9_temp           p0_io_power             p0_mem_power            p0_power                p0_vdd_temp           
+      p1_core0_temp           p1_core10_temp          p1_core11_temp          p1_core12_temp          p1_core13_temp          p1_core14_temp        
+      p1_core15_temp          p1_core16_temp          p1_core17_temp          p1_core18_temp          p1_core19_temp          p1_core1_temp         
+      p1_core20_temp          p1_core21_temp          p1_core22_temp          p1_core23_temp          p1_core2_temp           p1_core3_temp         
+      p1_core4_temp           p1_core5_temp           p1_core6_temp           p1_core7_temp           p1_core8_temp           p1_core9_temp         
+      p1_io_power             p1_mem_power            p1_power                p1_vdd_temp             pcie                    ps0_input_power       
+      ps0_input_voltag        ps0_output_curre        ps0_output_volta        ps1_input_power         ps1_input_voltag        ps1_output_curre      
+      ps1_output_volta        total_power           
+
+  job_table  (1 metrics)
+      job_info_marconi100   
+
+  nagios_pub  (1 metrics)
+      state                 
+
+  slurm_pub  (20 metrics)
+      cluster_cpu_util        cluster_memory_util     job_id                  num_nodes               total_cpus_alloc        total_cpus_config     
+      total_cpus_down         total_cpus_eligible     total_cpus_idle         total_memory_alloc      total_memory_config     total_memory_down     
+      total_memory_eligible   total_memory_idle       total_nodes_alloc       total_nodes_config      total_nodes_down        total_nodes_eligible  
+      total_nodes_idle        total_nodes_mixed     
+
+==============================================================================
+B. Requested metrics — schema and sanity
+==============================================================================
+  ipmi_pub/total_power
+      files=1  size=67.6 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=2, time 2020-06-06 22:00:40 .. 2020-06-07 21:59:40
+      value: min=380 max=1300 mean=729.5 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ipmi_pub/ambient
+      files=1  size=59.2 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=2, time 2020-06-20 22:00:20 .. 2020-06-21 21:59:40
+      value: min=12.6 max=15.2 mean=13.42 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ipmi_pub/p0_power
+      files=1  size=75.8 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=2, time 2020-06-23 22:00:00 .. 2020-06-24 21:59:40
+      value: min=22 max=194 mean=62.53 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ipmi_pub/p1_power
+      files=1  size=77.8 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=3, time 2020-06-10 22:00:00 .. 2020-06-11 21:59:40
+      value: min=12 max=92 mean=29.11 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ipmi_pub/fan0_0
+      files=1  size=42.6 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=2, time 2020-06-16 22:00:00 .. 2020-06-17 21:59:40
+      value: min=4300 max=4400 mean=4346 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ipmi_pub/fan0_1
+      files=1  size=28.8 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=15, time 2020-06-30 22:00:00 .. 2020-06-30 23:59:40
+      value: min=0 max=6000 mean=4714 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ipmi_pub/p0_core0_temp
+      files=1  size=28.3 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=2, time 2020-06-17 22:00:00 .. 2020-06-18 21:59:40
+      value: min=28 max=59 mean=37.09 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ipmi_pub/p1_core0_temp
+      files=1  size=25.8 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=2, time 2020-06-20 22:00:00 .. 2020-06-21 21:59:40
+      value: min=31 max=47 mean=37.69 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  ganglia_pub/cpu_user
+      files=1  size=24.1 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=9, time 2020-06-07 22:00:32 .. 2020-06-08 14:19:20
+      value: min=0 max=100 mean=31.01 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/cpu_system
+      files=1  size=22.4 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=6, time 2020-06-02 22:00:03 .. 2020-06-03 21:59:58
+      value: min=0 max=1.6 mean=0.4605 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/cpu_idle
+      files=1  size=23.2 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=6, time 2020-06-04 22:00:58 .. 2020-06-05 21:59:54
+      value: min=52.4 max=100 mean=89.43 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/cpu_wio
+      files=1  size=20.1 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=6, time 2020-06-02 22:00:36 .. 2020-06-25 21:59:56
+      value: min=0 max=0.1 mean=2e-05 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/load_one
+      files=1  size=34.0 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=4, time 2020-06-27 22:00:09 .. 2020-06-28 21:59:00
+      value: min=0 max=64.68 mean=29.6 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/load_five
+      files=1  size=32.8 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=3, time 2020-06-18 22:00:16 .. 2020-06-19 21:59:57
+      value: min=0 max=21.95 mean=2.387 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/mem_free
+      files=1  size=72.3 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=6, time 2020-06-05 22:00:22 .. 2020-06-13 21:59:21
+      value: min=1.931e+08 max=3.186e+08 mean=2.875e+08 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'double', 'node': 'string'}
+
+  ganglia_pub/bytes_in
+      files=1  size=30.2 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=6, time 2020-06-03 22:01:14 .. 2020-06-23 21:59:59
+      value: min=4738 max=2.254e+08 mean=3.697e+05 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/bytes_out
+      files=1  size=30.9 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=12, time 2020-06-01 22:00:12 .. 2020-06-02 21:59:40
+      value: min=2166 max=7.085e+04 mean=1.08e+04 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'float', 'node': 'string'}
+
+  ganglia_pub/proc_run
+      files=1  size=22.3 MB  columns=['timestamp', 'value', 'node']
+      detected: time='timestamp' value='value' entity='node'
+      head sample: 5,000 rows, entities=9, time 2020-06-17 22:00:48 .. 2020-06-18 14:10:25
+      value: min=0 max=133 mean=13.47 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32', 'node': 'string'}
+
+  slurm_pub/cluster_cpu_util
+      files=1  size=1.0 MB  columns=['timestamp', 'value']
+      detected: time='timestamp' value='value' entity=None
+      head sample: 5,000 rows, entities=0, time 2020-06-04 23:00:00 .. 2020-06-30 22:00:00
+      value: min=16 max=75 mean=48.52 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32'}
+
+  slurm_pub/cluster_memory_util
+      files=1  size=1.0 MB  columns=['timestamp', 'value']
+      detected: time='timestamp' value='value' entity=None
+      head sample: 5,000 rows, entities=0, time 2020-06-04 13:53:25 .. 2020-06-30 22:00:00
+      value: min=17 max=72 mean=48.33 null=0.00%
+      dtypes: {'timestamp': 'timestamp[ms, tz=UTC]', 'value': 'int32'}
+
+
+==============================================================================
+C. Missing metrics (rename or drop these in config.py)
+==============================================================================
+  none
+
+Wrote /home/siddharth/research/cs54-cooling/results/data_dictionary_20-06.md
+Wrote /home/siddharth/research/cs54-cooling/results/data_dictionary_20-06.csv
+
+==============================================================================
+NEXT
+==============================================================================
+  If section C lists missing metrics, correct their names in
+  config.py using section A, then re-run. Otherwise:
+      python 02_extract.py
+
+######## 02_extract  — build the rack-level table
+
+==============================================================================
+CS54 v2 — extracting month 20-06 at 5min, level=rack
+==============================================================================
+
+Per-node metrics (aggregated to racks 0..48):
+    total_power      rows_read= 121,798,458  bins=  414,981  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    ambient          rows_read= 121,960,336  bins=  414,981  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    p0_power         rows_read= 121,798,465  bins=  414,981  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    p1_power         rows_read= 121,798,464  bins=  414,981  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    fan0_0           rows_read= 122,084,760  bins=  414,981  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    fan0_1           rows_read= 122,084,759  bins=  414,981  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    p0_core0_temp    rows_read=  48,179,759  bins=  389,570  zones=  46  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    p1_core0_temp    rows_read=  45,072,611  bins=  414,977  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    cpu_user         rows_read=  10,234,820  bins=  215,616  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    cpu_system       rows_read=  10,194,473  bins=  215,616  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    cpu_idle         rows_read=  10,163,745  bins=  215,616  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    cpu_wio          rows_read=  10,108,566  bins=  215,617  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    load_one         rows_read=  10,545,794  bins=  215,618  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    load_five        rows_read=  10,526,058  bins=  215,618  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    mem_free         rows_read=  15,478,273  bins=  215,584  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    bytes_in         rows_read=   5,024,125  bins=  215,753  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    bytes_out        rows_read=   5,039,173  bins=  215,753  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    proc_run         rows_read=   8,353,333  bins=  215,444  zones=  49  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+
+Joining metrics on (time, zone) ...
+
+Cluster-wide metrics (broadcast to every rack):
+    cluster_cpu_util rows_read=     503,355  bins=    8,439  zones=   1  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+    cluster_memory_util rows_read=     503,355  bins=    8,439  zones=   1  [2020-06-01 00:00:00 .. 2020-06-30 23:55:00]
+
+==============================================================================
+Sensor plausibility filter
+==============================================================================
+  ambient_max                 115 readings outside [5.0, 40.0] -> NaN
+
+  These are sensor faults, not measurements. A 44 degC rack inlet
+  is not a real inlet temperature and would distort both the
+  ASHRAE statistics and the thermal model.
+
+==============================================================================
+Workload gap handling (the v1 bug)
+==============================================================================
+  forward-fill limit: 6 bins (30 min)
+
+  column              missing before   missing after
+  cpu_user                    48.10%          47.88%
+  cpu_system                  48.10%          47.88%
+  cpu_idle                    48.10%          47.88%
+  cpu_wio                     48.10%          47.88%
+  load_one                    48.10%          47.88%
+  load_five                   48.10%          47.88%
+  mem_free                    48.11%          47.88%
+  bytes_in                    48.06%          47.89%
+  bytes_out                   48.06%          47.89%
+  proc_run                    48.14%          47.88%
+
+  rows with at least one imputed workload value: 0.31%
+  Rows still NaN after this are genuine gaps and will be dropped by
+  the models — honestly, rather than filled with a fabricated zero.
+
+==============================================================================
+Derived features
+==============================================================================
+  cpu_busy         missing  47.88%
+  cpu_busy_alt     missing  47.88%
+  cpu_power        missing   0.11%
+  fan_speed        missing   0.11%
+  core_temp        missing   0.11%
+
+==============================================================================
+Extracted dataset
+==============================================================================
+  shape      : 415,424 rows x 37 columns
+  time span  : 2020-06-01 00:00:00  ..  2020-06-30 23:55:00
+  racks      : 49  (expected 49)
+  memory     : 125.0 MB
+
+  missing-data rate by column:
+      bytes_out              47.89 %  B/s   
+      bytes_in               47.89 %  B/s   
+      cpu_wio                47.88 %  %     
+      cpu_user               47.88 %  %     
+      cpu_busy_alt           47.88 %  %     
+      cpu_busy               47.88 %  %     
+      proc_run               47.88 %  count 
+      cpu_idle               47.88 %  %     
+      cpu_system             47.88 %  %     
+      load_one               47.88 %  procs 
+      load_five              47.88 %  procs 
+      mem_free               47.88 %  kB    
+      p0_core0_temp_max       6.22 %  degC  
+      p0_core0_temp           6.22 %  degC  
+      cluster_memory_util     1.99 %  %     
+      cluster_cpu_util        1.99 %  %     
+      ambient_max             0.13 %  degC  
+      p1_core0_temp           0.11 %  degC  
+      p1_core0_temp_max       0.11 %  degC  
+      core_temp               0.11 %  degC  
+      p1_power                0.11 %  W     
+      fan0_0                  0.11 %  RPM   
+      fan0_1                  0.11 %  RPM   
+      ambient                 0.11 %  degC  
+      total_power             0.11 %  W     
+      cpu_power               0.11 %  W     
+      fan_speed               0.11 %  RPM   
+      p0_power                0.11 %  W     
+      dow_cos                 0.00 %        
+      tod_sin                 0.00 %        
+      dow_sin                 0.00 %        
+      tod_cos                 0.00 %        
+      time                    0.00 %        
+      rack_row                0.00 %        
+      workload_imputed        0.00 %        
+      rack                    0.00 %        
+      is_weekend              0.00 %        
+
+  wrote /home/siddharth/research/cs54-cooling/data/processed/rack_5min_20-06.parquet  (31.5 MB)
+  wrote /home/siddharth/research/cs54-cooling/results/units_20-06.md
+
+  elapsed 20.3 min
+
+==============================================================================
+NEXT
+==============================================================================
+      python 03_ps1_predict.py
+
+######## 03_ps1      — sub-problem (a) prediction
+
+==============================================================================
+CS54 v2 — Sub-problem (a): heat and temperature prediction
+==============================================================================
+  restricted to 12 racks
+  101,736 rows x 37 cols · seed 42 · horizons [60] min
+
+==============================================================================
+(a) target=total_power [W] · horizon=12 steps (60 min)
+==============================================================================
+  split on 8,457 timestamps — train 5,751 · val 1,015 · test 1,691
+  test period 2020-06-25T02:05:00.000000000 .. 2020-06-30T22:55:00.000000000
+  sequence tensor (47756, 24, 10) from 10 signals (46 MB)
+  EVALUATION SET: 5,119 rows common to every model (99.8% of flat-usable test rows)
+  lstm trained in 71s
+  gru trained in 86s
+
+     target unit  horizon_min          model       RMSE       MAE    MAPE_%        R2    n
+total_power    W           60          ridge  57.154128 34.969007  5.578225  0.675151 5119
+total_power    W           60    persistence  59.193218 32.423454  5.104383  0.651558 5119
+total_power    W           60            gru  60.775108 37.712804  5.903592  0.632685 5119
+total_power    W           60           lstm  64.247709 41.609127  6.497052  0.589511 5119
+total_power    W           60        xgboost  66.186558 45.971249  7.093447  0.564362 5119
+total_power    W           60 seasonal_naive 106.917106 79.335697 12.668662 -0.136792 5119
+
+  vs persistence (RMSE 59.19 W, MAE 32.42 W):
+    ridge            RMSE  +3.44%   MAE  -7.85%   RMSE only
+    gru              RMSE  -2.67%   MAE -16.31%   WORSE on both
+    lstm             RMSE  -8.54%   MAE -28.33%   WORSE on both
+    xgboost          RMSE -11.81%   MAE -41.78%   WORSE on both
+    seasonal_naive   RMSE -80.62%   MAE -144.69%   WORSE on both
+
+  A model is only genuinely better if it wins on BOTH. Winning on
+  RMSE alone means it avoids a few large errors while being worse on
+  the typical prediction.
+
+==============================================================================
+(a) target=ambient [degC] · horizon=12 steps (60 min)
+==============================================================================
+  split on 8,457 timestamps — train 5,751 · val 1,015 · test 1,691
+  test period 2020-06-25T02:05:00.000000000 .. 2020-06-30T22:55:00.000000000
+  sequence tensor (47756, 24, 10) from 10 signals (46 MB)
+  EVALUATION SET: 5,119 rows common to every model (99.8% of flat-usable test rows)
+  lstm trained in 70s
+  gru trained in 41s
+
+ target unit  horizon_min          model     RMSE      MAE   MAPE_%       R2    n
+ambient degC           60    persistence 0.299479 0.212513 1.336835 0.894529 5119
+ambient degC           60        xgboost 0.301271 0.217211 1.364113 0.893263 5119
+ambient degC           60          ridge 0.301909 0.222779 1.399531 0.892811 5119
+ambient degC           60            gru 0.324130 0.235519 1.471154 0.876451 5119
+ambient degC           60           lstm 0.336701 0.247475 1.546518 0.866682 5119
+ambient degC           60 seasonal_naive 0.518798 0.395954 2.481730 0.683484 5119
+
+  vs persistence (RMSE 0.2995 degC, MAE 0.2125 degC):
+    xgboost          RMSE  -0.60%   MAE  -2.21%   WORSE on both
+    ridge            RMSE  -0.81%   MAE  -4.83%   WORSE on both
+    gru              RMSE  -8.23%   MAE -10.83%   WORSE on both
+    lstm             RMSE -12.43%   MAE -16.45%   WORSE on both
+    seasonal_naive   RMSE -73.23%   MAE -86.32%   WORSE on both
+
+  A model is only genuinely better if it wins on BOTH. Winning on
+  RMSE alone means it avoids a few large errors while being worse on
+  the typical prediction.
+
+==============================================================================
+Saved
+==============================================================================
+  /home/siddharth/research/cs54-cooling/results/ps1_results.csv
+  /home/siddharth/research/cs54-cooling/results/ps1_results.md
+  figures in /home/siddharth/research/cs54-cooling/figures
+
+  NEXT:  python 04_ps2_thermal.py
+
+######## 04_ps2      — sub-problem (b) dynamics
+
+==============================================================================
+CS54 v2 — Sub-problem (b): learned thermal dynamics
+==============================================================================
+  101,628 rows · 12 racks · state 'ambient' [degC]
+  split: train 5,759 · val 1,016 · test 1,694 timestamps · test begins 2020-06-25T02:50:00.000000000
+  59 candidate features (9 spatial, 39 historical)
+
+==============================================================================
+1. Thermal dynamics at several step sizes, with spatial ablation
+==============================================================================
+  Target is the CHANGE in rack inlet temperature over h steps, not its
+  level. Predicting the level scores R2 > 0.99 by echoing the input.
+  MAPE is omitted: the true change passes through zero.
+
+  h=1: too few complete rows (28084/0)
+  h=3: too few complete rows (28084/0)
+  h=6: too few complete rows (28084/0)
+  h=12: too few complete rows (28084/0)
+
+Empty DataFrame
+Columns: []
+Index: []
+
+  Reading this table:
+    R2 near zero  -> the change is dominated by noise at that step size
+    R2 rising with horizon -> real dynamics, previously masked by
+       sensor resolution over 5 minutes
+    neighbours helping only at longer steps -> heat transport between
+       racks is real but slower than one bin
+Traceback (most recent call last):
+  File "/home/siddharth/miniconda3/envs/cs54/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'horizon_min'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/siddharth/research/cs54-cooling/src/m100/04_ps2_thermal.py", line 477, in <module>
+    raise SystemExit(main())
+  File "/home/siddharth/research/cs54-cooling/src/m100/04_ps2_thermal.py", line 280, in main
+    s = abl[abl["horizon_min"] == h * C.STEP_MINUTES]
+  File "/home/siddharth/miniconda3/envs/cs54/lib/python3.10/site-packages/pandas/core/frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "/home/siddharth/miniconda3/envs/cs54/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'horizon_min'
+FAILED. See run_quick_20261004_0859.log

@@ -96,3 +96,6 @@ Fix: TMPDIR=~/tmp to redirect pip's temp directory to real disk.
 - Is uniform per-rack load a limitation to address or to note?
 
 **Next:** Phase 2 — feature engineering and selection.
+
+
+29 Sep — Scanned all 10 tar indexes of M100 Dataset 1. Facility plugins schneider_pub and logics_pub present only in 20-10 and 20-12; absent from all other months. vertiv absent from the entire record. Node-only coverage in 20-03/20-04. Usable window for facility-coupled work: October and December 2020. Plan: train simulator on 20-10, validate on 20-12.
