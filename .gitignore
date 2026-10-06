@@ -1,24 +1,16 @@
-# Data files (too large for Git)
 data/
-*.csv
-*.epw
-*.zip
+models/
+*.parquet
+*.tar
 *.tar.gz
-# Model checkpoints
-*.pth
+*.npy
 *.pt
-*.zip
-checkpoints/
-# Results (keep JSON records, ignore heavy outputs)
-results/*/checkpoints/
-logs/
-# Python
+*.pkl
+*.joblib
 __pycache__/
-*.py[cod]
 .ipynb_checkpoints/
+*.log
+nohup.out
 .env
-venv/
-# OS
-.DS_Store
-Thumbs.db
 sustaindc/
+*:Zone.Identifier

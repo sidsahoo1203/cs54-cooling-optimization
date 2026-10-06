@@ -25,16 +25,52 @@ ENTITY_CANDIDATES = ["node", "device", "panel", "host", "hostname", "nodeid"]
 
 # --------------------------------------------------------------- paths
 def metric_dir(raw_root: Path, month: str, plugin: str, metric: str) -> Path | None:
-    candidates = [
-        raw_root / f"year_month={month}" / f"plugin={plugin}" / f"metric={metric}",
-        raw_root / month / f"plugin={plugin}" / f"metric={metric}",
-        raw_root / f"year_month={month}" / plugin / metric,
-    ]
-    for c in candidates:
-        if c.is_dir():
-            return c
-    hits = list(raw_root.glob(f"**/plugin={plugin}/metric={metric}"))
-    return hits[0] if hits else None
+    """
+    Locate a metric directory, tolerating the naming variation that actually
+    occurs in M100 ExaData.
+
+    Three real differences this has to absorb:
+      * plugins are named `vertiv_pub`, `logics_pub`, `schneider_pub` on disk,
+        while the paper and the docs call them `vertiv`, `logics`, `schneider`
+      * Schneider metrics carry a PLC prefix: the documented `Temp_mandata` is
+        stored as `PLC_PLC_Q101.Temp_mandata`
+      * layouts differ between Hive (`year_month=22-01`) and bare (`22-01`)
+
+    The match is restricted to the requested month: without that, a glob happily
+    returns another month's directory, which is how slurm data from 20-06 once
+    surfaced in a 22-01 inspection.
+    """
+    plugin_names = list(dict.fromkeys([
+        plugin, f"{plugin}_pub",
+        plugin[:-4] if plugin.endswith("_pub") else plugin]))
+
+    for pl in plugin_names:
+        for base in (raw_root / f"year_month={month}", raw_root / month):
+            for d in (base / f"plugin={pl}" / f"metric={metric}",
+                      base / pl / metric):
+                if d.is_dir():
+                    return d
+
+    def in_month(p: Path) -> bool:
+        return any(part in (month, f"year_month={month}") for part in p.parts)
+
+    # Exact metric, any plugin spelling, inside the month.
+    for pl in plugin_names:
+        hits = [h for h in raw_root.glob(f"**/plugin={pl}/metric={metric}")
+                if in_month(h)]
+        if hits:
+            return hits[0]
+
+    # Suffix match, for prefixed names like PLC_PLC_Q101.Temp_mandata.
+    for pl in plugin_names:
+        pdirs = [d for d in raw_root.glob(f"**/plugin={pl}") if in_month(d)]
+        for pd in pdirs:
+            cands = [d for d in pd.iterdir()
+                     if d.is_dir() and d.name.startswith("metric=")
+                     and d.name.split("=", 1)[1].split(".")[-1] == metric]
+            if cands:
+                return sorted(cands)[0]
+    return None
 
 
 def list_available_metrics(raw_root: Path, month: str) -> dict[str, list[str]]:
@@ -148,7 +184,12 @@ def stream_metric_to_zones(
         if df.empty:
             continue
 
-        if entity_col is not None and agg_level == "rack":
+        if agg_level == "cluster":
+            # Collapse every entity into one room-level signal. Facility plugins
+            # carry a STRING entity ("CDZ1", "Q101"); coercing that to a number
+            # yields NaN and the groupby would then silently drop every row.
+            df["zone"] = -1
+        elif entity_col is not None and agg_level == "rack":
             ent = pd.to_numeric(df[entity_col], errors="coerce")
             if ent.notna().any():
                 df["zone"] = (ent // nodes_per_rack).astype("Int64")

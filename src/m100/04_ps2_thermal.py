@@ -154,8 +154,9 @@ def batched_rollout(model, feats, panel, horizon, stride):
         y = grp[STATE].to_numpy("float64")
         n = len(grp)
         for s in range(BUFLEN, n - horizon, stride):
-            if not np.isfinite(X[s:s + horizon]).all():
-                continue
+            # v2.1: only the THERMAL STATE must be finite. Exogenous features may
+            # contain NaN — XGBoost handles them — and demanding full rows here
+            # was leaving a single rack with enough data to roll out at all.
             if not np.isfinite(y[s - BUFLEN:s + horizon + 1]).all():
                 continue
             Xs.append(X[s:s + horizon])            # exogenous rows, in order
@@ -239,7 +240,13 @@ def main() -> int:
     for h in C.PS2_HORIZONS:
         lab = f"delta{h}"
         df[lab] = g[STATE].shift(-h) - df[STATE]
-        need = superset + [lab]
+        # v2.1: drop rows only for a missing TARGET, never for missing features.
+        # XGBoost learns a default split direction for NaN, so it uses an
+        # incomplete row rather than discarding it. Requiring every feature to be
+        # present threw away 98% of the data, because lags and rolling windows of
+        # the ~46%-missing Ganglia columns almost never all coincide. Selection is
+        # still by target only, so every feature set is scored on identical rows.
+        need = [lab, STATE]
         tr = df[df["time"].isin(t_tr)].dropna(subset=need)
         va = df[df["time"].isin(t_va)].dropna(subset=need)
         te = df[df["time"].isin(t_te)].dropna(subset=need)
@@ -269,24 +276,6 @@ def main() -> int:
     abl = pd.DataFrame(rows)
     print("\n" + abl.to_string(index=False))
 
-    # v2 fix: every horizon can legitimately produce zero complete rows (e.g.
-    # too few racks for the "plus_neighbours"/"plus_row" spatial features to
-    # ever have a real neighbour present, so those columns are NaN for every
-    # row and dropna() empties the frame). That leaves `rows` empty and `abl`
-    # with no "horizon_min" column at all. Detect that BEFORE indexing into
-    # abl below, instead of letting a bare KeyError('horizon_min') kill the
-    # run — report it as the real finding it is and stop cleanly.
-    if abl.empty or "horizon_min" not in abl.columns or not models_by_h:
-        print("\nNo model trained at any horizon: every horizon had too few "
-              "complete rows after dropna(). This is expected with a small "
-              "RACK_SUBSET, where racks commonly have no neighbour/row-mate "
-              "present in the subset, so the spatial feature columns are NaN "
-              "for essentially every row. Not a data or pipeline fault — "
-              "re-run with the full rack set (RACK_SUBSET = None) or a subset "
-              "large enough that every included rack's neighbours are also "
-              "included.")
-        return 1
-
     print("\n  Reading this table:")
     print("    R2 near zero  -> the change is dominated by noise at that step size")
     print("    R2 rising with horizon -> real dynamics, previously masked by")
@@ -302,6 +291,10 @@ def main() -> int:
             print(f"    {h * C.STEP_MINUTES:>3} min: neighbours change RMSE by "
                   f"{(1 - b / a) * 100:+.2f}%")
 
+    if not models_by_h:
+        print("\nNo model trained.")
+        return 1
+
     # ---------------------------------------------------- 2. rollout
     banner("2. Multi-step rollout vs a persistence rollout")
     print("  The 1-step model is iterated, feeding its own output back in through")
@@ -312,12 +305,12 @@ def main() -> int:
     if 1 in models_by_h:
         _, _, model1, feats1 = models_by_h[1]
         te_all = df[df["time"].isin(t_te)]
-        counts = te_all.dropna(subset=feats1 + [STATE])["rack"].value_counts()
+        counts = te_all.dropna(subset=[STATE])["rack"].value_counts()
         racks = sorted(counts[counts > max(C.ROLLOUT_HORIZONS) + BUFLEN + 5]
                        .index)[: args.rollout_racks]
         print(f"  rollout racks: {racks}  (stride {args.stride} steps)")
         panel = [(rk, te_all[te_all["rack"] == rk].sort_values("time")
-                  .dropna(subset=feats1 + [STATE])) for rk in racks]
+                  .dropna(subset=[STATE])) for rk in racks]
 
         for h in C.ROLLOUT_HORIZONS:
             pred, pers, truth = batched_rollout(model1, feats1, panel, h, args.stride)
@@ -348,7 +341,7 @@ def main() -> int:
     sens = pd.DataFrame()
     if 1 in models_by_h and ACTION in models_by_h[1][3]:
         _, _, m1, f1 = models_by_h[1]
-        te = df[df["time"].isin(t_te)].dropna(subset=f1)
+        te = df[df["time"].isin(t_te)].dropna(subset=[ACTION, STATE])
         if len(te) > 200:
             base = te[f1].to_numpy("float64")
             idx = f1.index(ACTION)

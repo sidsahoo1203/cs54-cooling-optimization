@@ -1,0 +1,48 @@
+{
+  "controller": "rule_based_fixed_setpoint",
+  "timestamp": "2026-09-15T17:58:38",
+  "git_commit": "650a9903ec94d2206ef2ded9f34a6a14be757d71",
+  "config": {
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      1011
+    ],
+    "action": "hold (1)",
+    "workload_file": "Alibaba_CPU_Data_Hourly_1.csv",
+    "weather_file": "USA_NY_New.York-Kennedy.epw",
+    "month": 0,
+    "ashrae_range_C": [
+      18.0,
+      27.0
+    ]
+  },
+  "mean": {
+    "steps": 672.0,
+    "cooling_energy_kWh": 71902.276,
+    "it_energy_kWh": 174389.338,
+    "total_energy_kWh": 246291.614,
+    "pue": 1.4123,
+    "mean_setpoint_C": 18.0,
+    "ashrae_violations_high": 0.0,
+    "ashrae_violations_low": 0.0,
+    "max_inlet_temp_C": 23.3,
+    "mean_headroom_C": 3.7,
+    "min_headroom_C": 3.7
+  },
+  "std": {
+    "steps": 0.0,
+    "cooling_energy_kWh": 784.9795,
+    "it_energy_kWh": 9.4119,
+    "total_energy_kWh": 792.144,
+    "pue": 0.0045,
+    "mean_setpoint_C": 0.0,
+    "ashrae_violations_high": 0.0,
+    "ashrae_violations_low": 0.0,
+    "max_inlet_temp_C": 0.0,
+    "mean_headroom_C": 0.0,
+    "min_headroom_C": 0.0
+  }
+}
