@@ -1,12 +1,15 @@
-data/
-models/
-*.parquet
+# Raw data — re-downloadable from Zenodo, not tracked
+data/*
+
+# Processed tables ARE tracked: raw data is deleted, these are the
+# only surviving input to every result in this repo.
+!data/processed/
+data/processed/*
+!data/processed/*.parquet
+
 *.tar
 *.tar.gz
 *.npy
-*.pt
-*.pkl
-*.joblib
 __pycache__/
 .ipynb_checkpoints/
 *.log
