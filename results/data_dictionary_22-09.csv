@@ -1,0 +1,20 @@
+plugin,metric,n_files,size_mb,columns,time_col,value_col,entity_col,entities_in_sample,sample_time_min,sample_time_max,val_min,val_max,val_mean,val_null_%
+ipmi_pub,total_power,1,96.6,"timestamp, value, node",timestamp,value,node,3,2022-09-10 22:00:00,2022-09-11 21:59:40,360.0,1400.0,623.472,0.0
+ipmi_pub,ambient,1,46.4,"timestamp, value, node",timestamp,value,node,2,2022-09-09 22:00:00,2022-09-10 21:59:40,21.6,25.2,23.8237,0.0
+ipmi_pub,p0_power,1,84.0,"timestamp, value, node",timestamp,value,node,2,2022-09-01 22:00:00,2022-09-02 21:59:40,26.0,192.0,63.5036,0.0
+ipmi_pub,p1_power,1,87.6,"timestamp, value, node",timestamp,value,node,2,2022-09-06 22:00:00,2022-09-07 21:59:40,24.0,188.0,91.8052,0.0
+ipmi_pub,fan0_0,1,41.4,"timestamp, value, node",timestamp,value,node,2,2022-09-27 22:00:00,2022-09-28 21:59:40,4300.0,7300.0,4457.02,0.0
+ipmi_pub,fan0_1,1,35.4,"timestamp, value, node",timestamp,value,node,2,2022-09-17 22:00:00,2022-09-18 21:59:40,4600.0,4700.0,4696.18,0.0
+ipmi_pub,p0_core0_temp,1,28.3,"timestamp, value, node",timestamp,value,node,3,2022-09-11 22:00:00,2022-09-12 21:59:40,40.0,60.0,46.3438,0.0
+ipmi_pub,p1_core0_temp,1,26.2,"timestamp, value, node",timestamp,value,node,2,2022-09-23 22:00:00,2022-09-24 21:59:40,37.0,61.0,46.5956,0.0
+ganglia_pub,cpu_user,1,100.7,"timestamp, value, node",timestamp,value,node,6,2022-09-09 22:00:06,2022-09-10 21:58:57,0.0,60.2,0.0792,0.0
+ganglia_pub,cpu_system,1,89.4,"timestamp, value, node",timestamp,value,node,6,2022-09-21 22:00:04,2022-09-22 21:59:56,0.0,1.0,0.0197,0.0
+ganglia_pub,cpu_idle,1,99.1,"timestamp, value, node",timestamp,value,node,7,2022-09-16 22:00:03,2022-09-17 21:59:12,73.6,99.9,93.8482,0.0
+ganglia_pub,cpu_wio,1,75.7,"timestamp, value, node",timestamp,value,node,6,2022-09-18 22:01:19,2022-09-19 21:59:59,0.0,0.0,0.0,0.0
+ganglia_pub,load_one,1,156.5,"timestamp, value, node",timestamp,value,node,5,2022-09-09 22:00:02,2022-09-10 21:59:58,0.21,98.16,23.0135,0.0
+ganglia_pub,load_five,1,150.2,"timestamp, value, node",timestamp,value,node,4,2022-09-07 22:00:42,2022-09-08 21:59:36,0.07,72.88,35.7595,0.0
+ganglia_pub,mem_free,1,217.8,"timestamp, value, node",timestamp,value,node,4,2022-09-15 22:00:09,2022-09-16 21:59:42,97136000.0,293970752.0,261681078.3104,0.0
+ganglia_pub,bytes_in,1,98.9,"timestamp, value, node",timestamp,value,node,10,2022-09-03 22:00:16,2022-09-04 21:59:46,4156.2598,2194486.0,10817.1641,0.0
+ganglia_pub,bytes_out,1,100.2,"timestamp, value, node",timestamp,value,node,9,2022-09-07 22:00:18,2022-09-08 21:57:44,14008.6904,654308.9375,25168.1602,0.0
+ganglia_pub,proc_run,1,66.0,"timestamp, value, node",timestamp,value,node,7,2022-09-07 22:00:23,2022-09-08 21:59:39,0.0,140.0,20.448,0.0
+slurm_pub,cluster_cpu_util,1,1.3,"timestamp, value, partition",timestamp,value,,0,2022-09-12 22:00:00,2022-09-24 21:59:50,0.0,79.3023,31.1523,0.0
